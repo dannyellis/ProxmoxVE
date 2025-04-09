@@ -56,10 +56,10 @@ function update_script() {
         mv /opt/actualbudget_bak/$dir/* /opt/actualbudget-data/$dir/ || true
       fi
     done
-    if [[ -f /opt/actualbudget-data/migrate/.migrations ]]; then
-      sed -i 's/null/1732656575219/g' /opt/actualbudget-data/migrate/.migrations
-      sed -i 's/null/1732656575220/g' /opt/actualbudget-data/migrate/.migrations
-    fi
+    if [[ -f /opt/actualbudget_bak/.migrate ]]; then
+      mv /opt/actualbudget_bak/.migrate /opt/actualbudget-data/.migrate
+    fi  
+    
     if [[ -f /opt/actualbudget/server-files/account.sqlite ]] && [[ ! -f /opt/actualbudget-data/server-files/account.sqlite ]]; then
       mv /opt/actualbudget/server-files/account.sqlite /opt/actualbudget-data/server-files/account.sqlite
     fi
@@ -71,8 +71,8 @@ function update_script() {
 
     if [[ -f /opt/actualbudget_bak/.env ]]; then
       mv /opt/actualbudget_bak/.env /opt/actualbudget-data/.env
-    else
-      cat <<EOF >/opt/actualbudget-data/.env
+    elif [[ -f /opt/actualbudget/selfhost.key ]]; then
+        cat <<EOF >/opt/actualbudget-data/.env
 ACTUAL_UPLOAD_DIR=/opt/actualbudget-data/upload
 ACTUAL_DATA_DIR=/opt/actualbudget-data
 ACTUAL_SERVER_FILES_DIR=/opt/actualbudget-data/server-files
@@ -81,6 +81,15 @@ PORT=5006
 ACTUAL_TRUSTED_PROXIES="10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1/32,::1/128,fc00::/7"
 ACTUAL_HTTPS_KEY=/opt/actualbudget/selfhost.key
 ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
+EOF
+    else
+      cat <<EOF >/opt/actualbudget-data/.env
+ACTUAL_UPLOAD_DIR=/opt/actualbudget-data/upload
+ACTUAL_DATA_DIR=/opt/actualbudget-data
+ACTUAL_SERVER_FILES_DIR=/opt/actualbudget-data/server-files
+ACTUAL_USER_FILES=/opt/actualbudget-data/user-files
+PORT=5006
+ACTUAL_TRUSTED_PROXIES="10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1/32,::1/128,fc00::/7"
 EOF
     fi
     cd /opt/actualbudget || exit
