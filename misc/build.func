@@ -290,7 +290,7 @@ update_motd_ip() {
 # Function to download & save header files
 get_header() {
   local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/headers/${app_name}"
+  local header_url="https://raw.githubusercontent.com/dannyellis/ProxmoxVE/main/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
   mkdir -p "$(dirname "$local_header_path")"
@@ -1395,7 +1395,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/"$var_install".sh)" || exit $?
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/dannyellis/ProxmoxVE/main/install/"$var_install".sh)" || exit $?
 
 }
 
